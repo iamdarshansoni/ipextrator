@@ -7,7 +7,6 @@ function check_url(){
 	urlCommand=`curl -s --head --request GET "$url"`
 
 	if (echo "$urlCommand" | grep -Eo '(HTTP/1.1|HTTP/2) 200') > /dev/null; then 
-		
 		echo $1" is UP... Processing..."
 		extract_hosts $1
 		list_end_points $1
@@ -60,18 +59,19 @@ function extract_hosts(){
 }
 
 function list_end_points(){
-	
-	hosts=`curl -s --request GET $1 | grep -Eo '(http|https)://[^$"]+' | sort -u`
 
+	hosts=`curl -s --request GET $1 | grep -Eo '(http|https)://[^$"]+' | sort -u`
+	
+	echo "$filename"
 	arr=( $hosts )
 
 	printf "\nUnique Endpoints\n"
 	printf '%s\n' "${hosts[@]}"
+	
 }
 
 function get_ip_addr(){
 
-	
 	ip=`host $2 | awk '/has address/ { print $4 }'`
 	ip_arr[$1]=$ip
 }
