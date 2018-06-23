@@ -60,13 +60,42 @@ function extract_hosts(){
 
 function list_end_points(){
 
-	hosts=`curl -s --request GET $1 | grep -Eo '(http|https)://[^$"]+' | sort -u`
+	hosts=`curl -s --request GET $1`
 	
-	echo "$filename"
-	arr=( $hosts )
+	uniueJsEndpoints=`echo "$hosts" | grep -Eo '(http|https)://[^$"]+' | sort -u`
+	
+#	echo "$filename"
+	arr=( $uniueJsEndpoints )
 
 	printf "\nUnique Endpoints\n"
-	printf '%s\n' "${hosts[@]}"
+	printf '%s\n' "${arr[@]}"
+
+	echo "Searching for js files...."
+	jsFiles=`echo "$hosts" | grep -Eo '(http|https)://[^*.js"]+' | sort -u`
+	jsFilesArr=( $jsFiles )
+	
+	len=${#jsFilesArr[@]}
+	
+	printf "Found js Files... Extracting endpoints... \n"
+	for (( x=0; x<len; x++ ))
+	do
+		printf "\n Endpoints of: "${jsFilesArr[$x]}"\n"	
+		#extract_js_endpoints ${jsFilesArr[$x]}
+	done
+	
+	
+	
+}
+
+function extract_js_endpoints(){
+
+	jsFile=`curl -s --request GET $1`
+	
+	endPoints=`echo "$hosts" | grep -Eo '(http|https)://[^$"]+' | sort -u`
+	
+	arr=( $uniueJsEndpoints )
+	printf '%s\n' "${arr[@]}"
+
 	
 }
 
